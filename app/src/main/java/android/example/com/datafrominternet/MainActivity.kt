@@ -8,6 +8,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import android.example.com.datafrominternet.utilities.NetworkUtils
 import android.os.AsyncTask
+import android.view.View
 import java.io.IOException
 import java.net.URL
 
@@ -22,6 +23,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     inner class GithubQueryTask: AsyncTask<URL, Void, String>() {
+        override fun onPreExecute() {
+            super.onPreExecute()
+            pb_loading_indicator.visibility = View.VISIBLE
+        }
+
         override fun doInBackground(vararg urls: URL?): String {
 
             var responseFromHttpUrl: String? = null
@@ -31,11 +37,18 @@ class MainActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
 
-            return responseFromHttpUrl ?: "Error"
+            return responseFromHttpUrl ?: ""
         }
 
         override fun onPostExecute(result: String) {
-            mSearchResult.text = result
+            pb_loading_indicator.visibility = View.INVISIBLE
+
+            if (result != "") {
+                showJsonDataView()
+                mSearchResult.text = result
+            } else {
+                showErrorMessage()
+            }
         }
     }
 
@@ -64,5 +77,15 @@ class MainActivity : AppCompatActivity() {
         tv_url_display.text = githubSearchUrl.toString()
 
         GithubQueryTask().execute(githubSearchUrl)
+    }
+
+    private fun showJsonDataView() {
+        tv_error_message_display.visibility = View.INVISIBLE
+        tv_github_search_results_json.visibility = View.VISIBLE
+    }
+
+    private fun showErrorMessage() {
+        tv_error_message_display.visibility = View.VISIBLE
+        tv_github_search_results_json.visibility = View.INVISIBLE
     }
 }
