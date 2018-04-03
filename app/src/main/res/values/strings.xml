@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Data From Internet</string>
+    <string name="type_a_query_for_github">Type a query for github</string>
+    <string name="enter_a_query">Enter a query</string>
+    <string name="search">Search</string>
+</resources>
